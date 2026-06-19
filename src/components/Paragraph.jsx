@@ -1,7 +1,10 @@
 import React from "react";
-import TermSpan from "./TermSpan.jsx";
-import { PALETTE, FONT_SERIF } from "../data/constants.js";
+import TermSpan from "./TermSpan";
+import { PALETTE, FONT_SERIF } from "../lib/constants";
 
+// A single reading paragraph. Deep Focus dims it based on distance from
+// the current reading position; Socratic Margin makes it clickable to
+// raise/lower the reflective prompt; X-Ray terms render via TermSpan.
 export default function Paragraph({
   id,
   segments,
@@ -17,16 +20,13 @@ export default function Paragraph({
   delay,
 }) {
   const effectiveOpacity = deepFocus ? opacity : 1;
-
   return (
     <p
       ref={paragraphRef}
       data-pid={id}
       className="cr-fade-up"
       style={{ animationDelay: `${delay}ms`, touchAction: "manipulation" }}
-      onClick={() => {
-        if (socraticMode) onToggleHighlight(id);
-      }}
+      onClick={() => { if (socraticMode) onToggleHighlight(id); }}
     >
       <span
         style={{
@@ -42,20 +42,12 @@ export default function Paragraph({
           padding: "2px 16px",
           marginLeft: -16,
           cursor: socraticMode ? "pointer" : "default",
-          transition:
-            "opacity 700ms ease, background-color 450ms ease, border-color 450ms ease",
+          transition: "opacity 700ms ease, background-color 450ms ease, border-color 450ms ease",
         }}
       >
         {segments.map((seg, i) =>
           seg.type === "term" ? (
-            <TermSpan
-              key={i}
-              id={seg.key}
-              label={seg.label}
-              definition={seg.definition}
-              expandedTerm={expandedTerm}
-              setExpandedTerm={setExpandedTerm}
-            />
+            <TermSpan key={i} id={seg.key} label={seg.label} definition={seg.definition} expandedTerm={expandedTerm} setExpandedTerm={setExpandedTerm} />
           ) : (
             <React.Fragment key={i}>{seg.content}</React.Fragment>
           )
